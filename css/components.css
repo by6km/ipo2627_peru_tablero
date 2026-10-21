@@ -1,0 +1,195 @@
+/* ==========================================================
+   COMPONENTES: botones, formulario, marcador, tablero, fichas, diálogo
+   Selectores de una sola clase (BEM) o atributos data-* para
+   mantener especificidad baja y predecible.
+   ========================================================== */
+
+/* ---------- Botones ---------- */
+.boton {
+  padding: var(--esp-2) var(--esp-4);
+  border: 2px solid var(--color-primario);
+  border-radius: var(--radio);
+  background: var(--color-primario);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.boton:hover { background: #244ba8; border-color: #244ba8; }
+.boton--secundario { background: transparent; color: var(--color-primario); }
+.boton--secundario:hover { background: var(--superficie-suave); color: #244ba8; }
+
+/* ---------- Formulario ---------- */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+}
+.formulario__grupo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+  margin: 0;
+  padding: var(--esp-3);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+}
+.formulario__grupo legend {
+  padding-inline: var(--esp-2);
+  font-weight: 600;
+}
+.formulario__error {
+  color: var(--color-secundario);
+  font-size: var(--texto-s);
+  min-height: 1.25rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-1);
+  flex: 1;
+  font-size: var(--texto-s);
+  color: var(--texto-suave);
+}
+.campo-doble { display: flex; gap: var(--esp-3); }
+
+.campo input,
+.campo select {
+  width: 100%;
+  min-height: 2.25rem;
+  padding: var(--esp-1) var(--esp-2);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--superficie);
+  color: var(--texto);
+  font: inherit;
+}
+.campo input[type="color"] { padding: 2px; cursor: pointer; }
+
+/* ---------- Marcador ---------- */
+.marcador {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--esp-3);
+  padding-inline: var(--esp-3);
+  font-weight: 600;
+}
+.marcador__mensaje { color: #3f6310; }
+
+.zona-tablero__pista {
+  padding-inline: var(--esp-3);
+  color: var(--texto-suave);
+  font-size: var(--texto-s);
+}
+
+/* ---------- Tablero ----------
+   --n (nº de columnas) se fija desde JS; --ficha depende de data-tamano. */
+.tablero {
+  --n: 4;
+  --ficha: 3.5rem;
+  --celda: calc(var(--ficha) + 1rem);
+
+  display: grid;
+  grid-template-columns: repeat(var(--n), var(--celda));
+  gap: var(--esp-2);
+  width: max-content;
+  margin-inline: auto;
+  padding: var(--esp-3);
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+}
+.tablero[data-tamano="pequena"] { --ficha: 2rem; }
+.tablero[data-tamano="mediana"] { --ficha: 3.5rem; }
+.tablero[data-tamano="grande"]  { --ficha: 5rem; }
+.tablero[data-estado="completo"] { border-color: var(--color-terciario); border-width: 3px; }
+
+/* ---------- Celda ----------
+   position: relative para anclar las ayudas visuales (tooltip y marca de fila). */
+.celda {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  background: var(--superficie-suave);
+  border-radius: var(--radio);
+  outline: 3px solid transparent;
+  outline-offset: -3px;
+}
+.celda:focus-within { outline-color: var(--color-primario); }
+.celda[data-estado="seleccionada"] { outline-color: var(--color-secundario); }
+
+/* Fila completa: marca ✓ posicionada en la esquina de cada celda */
+.celda[data-fila-completa] { background: #e6f0d2; }
+.celda[data-fila-completa]::before {
+  content: "✓";
+  position: absolute;
+  top: 2px;
+  right: 6px;
+  color: #3f6310;
+  font-size: var(--texto-s);
+  font-weight: 700;
+}
+
+/* Ayuda al arrastrar: tooltip sobre la celda de destino */
+.celda[data-estado="destino"] {
+  outline-color: var(--color-primario);
+  background: #dbe4fa;
+}
+.celda[data-estado="destino"]::after {
+  content: "Intercambiar";
+  position: absolute;
+  bottom: calc(100% + var(--esp-1));
+  left: 50%;
+  translate: -50% 0;
+  z-index: 2;
+  padding: var(--esp-1) var(--esp-2);
+  border-radius: var(--esp-1);
+  background: var(--texto);
+  color: #fff;
+  font-size: var(--texto-s);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ---------- Ficha ----------
+   El color llega por la variable --color; la forma, por data-forma. */
+.ficha {
+  width: var(--ficha);
+  height: var(--ficha);
+  background: var(--color);
+  cursor: grab;
+  outline: none; /* el foco se muestra en la celda (:focus-within) */
+}
+.ficha:active { cursor: grabbing; }
+.ficha[data-arrastrando] { opacity: 0.4; }
+.tablero[data-estado="completo"] .ficha { cursor: default; }
+
+.ficha[data-forma="circulo"]   { border-radius: 50%; }
+.ficha[data-forma="cuadrado"]  { border-radius: 12%; }
+.ficha[data-forma="triangulo"] { clip-path: polygon(50% 5%, 96% 92%, 4% 92%); }
+.ficha[data-forma="rombo"]     { clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.ficha[data-forma="hexagono"]  { clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0 50%); }
+.ficha[data-forma="estrella"]  {
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+/* ---------- Diálogo de ayuda ---------- */
+.dialogo {
+  max-width: 32rem;
+  padding: var(--esp-4);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  color: var(--texto);
+}
+.dialogo::backdrop { background: rgb(27 33 51 / 0.55); }
+.dialogo__lista { margin: var(--esp-3) 0; }
+.dialogo__lista dt { margin-top: var(--esp-3); font-weight: 700; }
+.dialogo__lista dd { margin: 0; color: var(--texto-suave); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .ficha { transition: opacity 0.15s; }
+}

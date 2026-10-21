@@ -1,0 +1,68 @@
+/* ==========================================================
+   LAYOUT: composición de la página
+   - Página: Grid unidimensional (cabecera / contenido / pie)
+   - Cabecera: Flexbox
+   - Zona de juego: Grid bidimensional (panel + tablero)
+   ========================================================== */
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+}
+
+.cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-3);
+  padding: var(--esp-4);
+  background: var(--superficie);
+  border-bottom: 4px solid var(--color-primario);
+}
+
+.cabecera__lema {
+  color: var(--texto-suave);
+}
+
+.juego {
+  display: grid;
+  grid-template-columns: minmax(16rem, 20rem) 1fr;
+  gap: var(--esp-4);
+  align-items: start;
+  padding: var(--esp-4);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+  padding: var(--esp-4);
+  background: var(--superficie);
+  border-radius: var(--radio);
+  border: 1px solid var(--borde);
+}
+
+.zona-tablero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+  min-width: 0; /* permite que el scroll interno funcione dentro del grid */
+}
+
+.zona-tablero__scroll {
+  overflow: auto;
+  padding: var(--esp-5) var(--esp-3) var(--esp-3);
+}
+
+.pie {
+  padding: var(--esp-3) var(--esp-4);
+  color: var(--texto-suave);
+  font-size: var(--texto-s);
+  text-align: center;
+}
+
+@media (max-width: 48rem) {
+  .juego { grid-template-columns: 1fr; }
+}

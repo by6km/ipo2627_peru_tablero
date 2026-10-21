@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tablero · Juego de fichas</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <header class="cabecera">
+    <div>
+      <h1>Tablero</h1>
+      <p class="cabecera__lema">Agrupa las fichas hasta que cada fila tenga un único tipo.</p>
+    </div>
+    <button type="button" class="boton boton--secundario" data-accion="ayuda">¿Cómo se juega?</button>
+  </header>
+
+  <main class="juego">
+    <aside class="panel" aria-labelledby="titulo-config">
+      <h2 id="titulo-config">Configuración</h2>
+
+      <form class="formulario" data-formulario="config" novalidate>
+        <fieldset class="formulario__grupo">
+          <legend>Tablero</legend>
+          <label class="campo">
+            <span>Dimensión (N × N)</span>
+            <input type="number" name="dimension" min="3" max="10" value="4" inputmode="numeric">
+          </label>
+          <label class="campo">
+            <span>Tamaño de las fichas</span>
+            <select name="tamano">
+              <option value="pequena">Pequeña</option>
+              <option value="mediana" selected>Mediana</option>
+              <option value="grande">Grande</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <fieldset class="formulario__grupo">
+          <legend>Ficha del tipo 1</legend>
+          <div class="campo-doble">
+            <label class="campo">
+              <span>Forma</span>
+              <select name="forma-0" data-tipo="0">
+                <option value="circulo" selected>Círculo</option>
+                <option value="cuadrado">Cuadrado</option>
+                <option value="triangulo">Triángulo</option>
+                <option value="rombo">Rombo</option>
+                <option value="hexagono">Hexágono</option>
+                <option value="estrella">Estrella</option>
+              </select>
+            </label>
+            <label class="campo">
+              <span>Color</span>
+              <input type="color" name="color-0" value="#2f5fd0">
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="formulario__grupo">
+          <legend>Ficha del tipo 2</legend>
+          <div class="campo-doble">
+            <label class="campo">
+              <span>Forma</span>
+              <select name="forma-1" data-tipo="1">
+                <option value="circulo">Círculo</option>
+                <option value="cuadrado" selected>Cuadrado</option>
+                <option value="triangulo">Triángulo</option>
+                <option value="rombo">Rombo</option>
+                <option value="hexagono">Hexágono</option>
+                <option value="estrella">Estrella</option>
+              </select>
+            </label>
+            <label class="campo">
+              <span>Color</span>
+              <input type="color" name="color-1" value="#c92a7c">
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="formulario__grupo">
+          <legend>Ficha del tipo 3</legend>
+          <div class="campo-doble">
+            <label class="campo">
+              <span>Forma</span>
+              <select name="forma-2" data-tipo="2">
+                <option value="circulo">Círculo</option>
+                <option value="cuadrado">Cuadrado</option>
+                <option value="triangulo" selected>Triángulo</option>
+                <option value="rombo">Rombo</option>
+                <option value="hexagono">Hexágono</option>
+                <option value="estrella">Estrella</option>
+              </select>
+            </label>
+            <label class="campo">
+              <span>Color</span>
+              <input type="color" name="color-2" value="#6fa51c">
+            </label>
+          </div>
+        </fieldset>
+
+        <p class="formulario__error" data-error role="alert"></p>
+        <button type="button" class="boton" data-accion="nueva">Nueva partida</button>
+      </form>
+    </aside>
+
+    <section class="zona-tablero" aria-labelledby="titulo-tablero">
+      <h2 id="titulo-tablero" class="visualmente-oculto">Tablero de juego</h2>
+      <div class="marcador">
+        <p>Movimientos: <output data-marcador="movimientos">0</output></p>
+        <p class="marcador__mensaje" data-mensaje role="status"></p>
+      </div>
+      <div class="zona-tablero__scroll">
+        <div class="tablero" data-tablero></div>
+      </div>
+      <p class="zona-tablero__pista">Arrastra una ficha sobre otra para intercambiarlas. También puedes pulsar dos fichas seguidas.</p>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <p>Proyecto Tablero · HTML, CSS y JavaScript nativos</p>
+  </footer>
+
+  <dialog class="dialogo" data-dialogo="ayuda" aria-labelledby="titulo-ayuda">
+    <h2 id="titulo-ayuda">Mecánica del juego</h2>
+    <dl class="dialogo__lista">
+      <dt>Comienzo</dt>
+      <dd>El tablero se reparte al azar con fichas elegidas para que el juego siempre tenga solución.</dd>
+      <dt>Movimiento</dt>
+      <dd>Intercambia las fichas de dos celdas arrastrando una sobre otra.</dd>
+      <dt>Fin</dt>
+      <dd>La partida termina cuando cada fila contiene fichas del mismo tipo.</dd>
+      <dt>Cambios de configuración</dt>
+      <dd>Si cambias la dimensión, el tamaño o el aspecto de las fichas, empieza una partida nueva.</dd>
+    </dl>
+    <form method="dialog">
+      <button class="boton">Entendido</button>
+    </form>
+  </dialog>
+</body>
+</html>

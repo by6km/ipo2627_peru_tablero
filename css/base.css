@@ -1,0 +1,76 @@
+/* ==========================================================
+   BASE: reinicio + sistema de diseño (cromático, tipográfico, espacial)
+   ========================================================== */
+
+/* DISEÑO CROMÁTICO — esquema triádico.
+   Tres tonos equidistantes (azul 220°, magenta 330°, verde 90°) que son
+   también los colores por defecto de las tres fichas. Los neutros son un
+   gris azulado frío para que los tres tonos destaquen por igual. */
+:root {
+  --color-primario: #2f5fd0;
+  --color-secundario: #c92a7c;
+  --color-terciario: #6fa51c;
+
+  --fondo: #e9edf5;
+  --superficie: #ffffff;
+  --superficie-suave: #f3f5fa;
+  --borde: #c9d0e0;
+  --texto: #1b2133;
+  --texto-suave: #4d566e;
+
+  /* DISEÑO TIPOGRÁFICO — dos fuentes contrastadas:
+     serif (títulos, carácter) frente a sans del sistema (interfaz, legibilidad).
+     Escala modular de razón ~1.25. */
+  --fuente-titulo: Georgia, "Times New Roman", serif;
+  --fuente-texto: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --texto-s: 0.875rem;
+  --texto-m: 1rem;
+  --texto-l: 1.25rem;
+  --texto-xl: 2rem;
+
+  /* DISEÑO ESPACIAL — rem como unidad base y escala de múltiplos de 0.25rem.
+     Gestalt: proximidad (campos relacionados juntos, grupos separados)
+     y cierre (cada grupo en su fieldset con borde). */
+  --esp-1: 0.25rem;
+  --esp-2: 0.5rem;
+  --esp-3: 1rem;
+  --esp-4: 1.5rem;
+  --esp-5: 2.5rem;
+  --radio: 0.5rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: var(--fuente-texto);
+  font-size: var(--texto-m);
+  line-height: 1.5;
+}
+
+h1, h2 {
+  margin: 0;
+  font-family: var(--fuente-titulo);
+  font-weight: 700;
+  line-height: 1.2;
+}
+h1 { font-size: var(--texto-xl); }
+h2 { font-size: var(--texto-l); }
+
+p { margin: 0; }
+
+.visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-primario);
+  outline-offset: 2px;
+}
