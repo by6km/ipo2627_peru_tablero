@@ -1,14 +1,12 @@
 // VISTA: lee y escribe el DOM. No contiene reglas del juego.
 // Los elementos se localizan con atributos data-* (data-tablero, data-celda, ...).
 
-import { FORMAS } from '../model/Configuracion.js';
-
 const NOMBRES_FORMA = {
   circulo: 'círculo', cuadrado: 'cuadrado', triangulo: 'triángulo',
   rombo: 'rombo', hexagono: 'hexágono', estrella: 'estrella'
 };
 
-export class TableroView {
+class TableroView {
   constructor(raiz) {
     this.raiz = raiz;
     this.tablero = raiz.querySelector('[data-tablero]');
@@ -72,20 +70,26 @@ export class TableroView {
     this.tablero.replaceChildren(...celdas);
   }
 
+  _abrirAyuda() {
+    const d = this.dialogoAyuda;
+    if (d.open) return;
+    try { d.showModal(); } catch (e) { d.setAttribute('open', ''); }
+  }
+
   setMovimientos(n) { this.marcador.textContent = n; }
   mostrarMensaje(texto) { this.mensaje.textContent = texto; }
   mostrarError(texto) { this.error.textContent = texto; }
 
   marcarSeleccion(indice) {
-    this.#limpiarEstados();
-    this.#celda(indice)?.setAttribute('data-estado', 'seleccionada');
+    this._limpiarEstados();
+    this._celda(indice)?.setAttribute('data-estado', 'seleccionada');
   }
 
-  #celda(indice) {
+  _celda(indice) {
     return this.tablero.querySelector(`[data-celda="${indice}"]`);
   }
 
-  #limpiarEstados() {
+  _limpiarEstados() {
     this.tablero.querySelectorAll('[data-estado]').forEach(c => c.removeAttribute('data-estado'));
     this.tablero.querySelectorAll('[data-arrastrando]').forEach(f => f.removeAttribute('data-arrastrando'));
   }
@@ -128,11 +132,11 @@ export class TableroView {
       e.preventDefault();
       const origen = Number(e.dataTransfer.getData('text/plain'));
       const destino = Number(celda.dataset.celda);
-      this.#limpiarEstados();
+      this._limpiarEstados();
       manejadores.onIntercambio(origen, destino);
     });
 
-    t.addEventListener('dragend', () => this.#limpiarEstados());
+    t.addEventListener('dragend', () => this._limpiarEstados());
 
     // Alternativa sin arrastrar: ratón/teclado (pulsar dos fichas)
     t.addEventListener('click', e => {
@@ -148,12 +152,12 @@ export class TableroView {
       manejadores.onSeleccionar(Number(celda.dataset.celda));
     });
 
-    // Botones por data-accion
-    this.raiz.addEventListener('click', e => {
-      const boton = e.target.closest('[data-accion]');
-      if (!boton) return;
-      if (boton.dataset.accion === 'nueva') manejadores.onNuevaPartida();
-      if (boton.dataset.accion === 'ayuda') this.dialogoAyuda.showModal();
+    // Botones por data-accion (enlazados directamente a cada botón)
+    this.raiz.querySelectorAll('[data-accion]').forEach(boton => {
+      boton.addEventListener('click', () => {
+        if (boton.dataset.accion === 'nueva') manejadores.onNuevaPartida();
+        if (boton.dataset.accion === 'ayuda') this._abrirAyuda();
+      });
     });
 
     // Cualquier cambio de configuración crea un tablero nuevo
