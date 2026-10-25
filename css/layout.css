@@ -1,68 +1,158 @@
 /* ==========================================================
-   LAYOUT: composición de la página
-   - Página: Grid unidimensional (cabecera / contenido / pie)
-   - Cabecera: Flexbox
-   - Zona de juego: Grid bidimensional (panel + tablero)
+   LAYOUT: la pantalla completa es el área de juego.
+   Grid distribuye cabecera / contenido / pie y panel / tablero.
+   Flexbox organiza cabecera y controles. No hay scroll de página.
    ========================================================== */
+
+html, body { height: 100%; }
 
 body {
   display: grid;
-  grid-template-rows: auto 1fr auto;
-  min-height: 100vh;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .cabecera {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--esp-3);
-  padding: var(--esp-4);
+  gap: var(--esp-2);
+  padding: 0.55rem 1rem;
   background: var(--superficie);
-  border-bottom: 4px solid var(--color-primario);
+  border-bottom: 3px solid var(--color-primario);
 }
 
-.cabecera__lema {
-  color: var(--texto-suave);
-}
+.cabecera h1 { font-size: clamp(1.4rem, 2.4vw, 1.85rem); }
+.cabecera__lema { color: var(--texto-suave); font-size: var(--texto-s); }
+.cabecera__acciones { display: flex; gap: var(--esp-2); flex-shrink: 0; }
 
 .juego {
   display: grid;
-  grid-template-columns: minmax(16rem, 20rem) 1fr;
-  gap: var(--esp-4);
-  align-items: start;
-  padding: var(--esp-4);
+  grid-template-columns: clamp(17rem, 27vw, 20.5rem) minmax(0, 1fr);
+  gap: clamp(0.5rem, 1.2vw, 1rem);
+  align-items: stretch;
+  min-height: 0;
+  min-width: 0;
+  padding: clamp(0.5rem, 1.2vw, 1rem);
+  overflow: hidden;
 }
 
 .panel {
   display: flex;
   flex-direction: column;
-  gap: var(--esp-3);
-  padding: var(--esp-4);
+  gap: 0.5rem;
+  min-height: 0;
+  min-width: 0;
+  padding: clamp(0.55rem, 1vw, 0.85rem);
   background: var(--superficie);
   border-radius: var(--radio);
   border: 1px solid var(--borde);
 }
+.panel__cabecera { display: flex; align-items: center; justify-content: space-between; }
+/* Selectores más específicos que .boton para ocultar controles móviles en PC. */
+.panel .panel__cerrar, .cabecera .cabecera__ajustes,
+.panel__pestanas, .ajustes-fondo { display: none; }
 
 .zona-tablero {
-  display: flex;
-  flex-direction: column;
-  gap: var(--esp-3);
-  min-width: 0; /* permite que el scroll interno funcione dentro del grid */
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(0.35rem, 1vh, 0.75rem);
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
-.zona-tablero__scroll {
-  overflow: auto;
-  padding: var(--esp-5) var(--esp-3) var(--esp-3);
+/* Contenedor medible: JS adapta la celda al ANCHO y al ALTO disponibles. */
+.zona-tablero__area {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0.35rem;
+  overflow: hidden;
 }
 
 .pie {
-  padding: var(--esp-3) var(--esp-4);
+  padding: 0.3rem 0.75rem;
   color: var(--texto-suave);
-  font-size: var(--texto-s);
+  font-size: 0.75rem;
+  line-height: 1.3;
   text-align: center;
 }
 
-@media (max-width: 48rem) {
-  .juego { grid-template-columns: 1fr; }
+/* Pantallas de poca altura: densidad mayor, sin reducir controles a tamaño ilegible. */
+@media (max-height: 720px) and (min-width: 761px) {
+  .cabecera { padding-block: 0.35rem; }
+  .cabecera__lema { display: none; }
+  .juego { padding: 0.45rem; }
+  .panel { gap: 0.3rem; padding: 0.45rem; }
+  .zona-tablero__pista { font-size: 0.75rem; }
+}
+
+/* En móvil, el tablero utiliza toda la pantalla; los ajustes son un panel
+   superpuesto con pestañas para acceder a TODOS los campos sin scroll. */
+@media (max-width: 760px), (max-height: 540px) {
+  .cabecera { padding: 0.45rem 0.65rem; }
+  .cabecera__lema { display: none; }
+  .cabecera__acciones .boton { padding: 0.4rem 0.6rem; font-size: 0.82rem; }
+  .cabecera .cabecera__ajustes { display: inline-flex; align-items: center; }
+  .juego { display: block; padding: 0.45rem; }
+  .zona-tablero { height: 100%; }
+
+  .panel { display: none; }
+  .panel[data-abierto="true"] {
+    position: fixed;
+    z-index: 21;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    width: min(96vw, 29rem);
+    max-height: calc(100dvh - 1rem);
+    padding: 0.7rem;
+    gap: 0.5rem;
+    box-shadow: 0 1rem 3rem rgb(27 33 51 / 0.25);
+  }
+  .panel .panel__cerrar { display: inline-flex; }
+  .panel__pestanas { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+  .panel__pestanas button[aria-selected="true"] {
+    background: var(--color-primario);
+    color: #fff;
+  }
+  .panel__pestanas button[aria-selected="false"] {
+    background: var(--superficie-suave);
+    color: var(--texto);
+    border-color: var(--borde);
+  }
+  .panel[data-vista="tablero"] .formulario__grupo:not(:first-child) { display: none; }
+  .panel[data-vista="fichas"] .formulario__grupo:first-child { display: none; }
+  .panel[data-vista="fichas"] .formulario {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+  }
+  .panel[data-vista="fichas"] .formulario__grupo { padding: 0.4rem; min-width: 0; }
+  .panel[data-vista="fichas"] .formulario__grupo legend { font-size: 0.76rem; padding-inline: 0; }
+  .panel[data-vista="fichas"] .campo-doble { flex-direction: column; gap: 0.35rem; }
+  .panel[data-vista="fichas"] .formulario__error,
+  .panel[data-vista="fichas"] .formulario > .boton { grid-column: 1 / -1; }
+  .ajustes-fondo[data-abierto="true"] {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    border: 0;
+    background: rgb(27 33 51 / 0.48);
+    cursor: pointer;
+  }
+}
+
+@media (max-height: 520px) {
+  .pie, .zona-tablero__pista { display: none; }
+  .cabecera { padding-block: 0.25rem; }
 }

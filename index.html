@@ -14,12 +14,23 @@
       <h1>Tablero</h1>
       <p class="cabecera__lema">Agrupa las fichas hasta que cada fila tenga un único tipo.</p>
     </div>
-    <button type="button" class="boton boton--secundario" data-accion="ayuda">¿Cómo se juega?</button>
+    <div class="cabecera__acciones">
+      <button type="button" class="boton boton--secundario cabecera__ajustes"
+              data-accion="ajustes" aria-controls="panel-ajustes" aria-expanded="false">Ajustes</button>
+      <button type="button" class="boton boton--secundario" data-accion="ayuda">¿Cómo se juega?</button>
+    </div>
   </header>
 
   <main class="juego">
-    <aside class="panel" aria-labelledby="titulo-config">
-      <h2 id="titulo-config">Configuración</h2>
+    <aside class="panel" id="panel-ajustes" data-abierto="false" data-vista="tablero" aria-labelledby="titulo-config">
+      <div class="panel__cabecera">
+        <h2 id="titulo-config">Configuración</h2>
+        <button type="button" class="boton boton--secundario panel__cerrar" data-accion="cerrar-ajustes" aria-label="Cerrar ajustes">✕</button>
+      </div>
+      <div class="panel__pestanas" role="group" aria-label="Tipo de ajustes">
+        <button type="button" class="boton" data-accion="tab-ajustes-tablero" aria-selected="true">Tablero</button>
+        <button type="button" class="boton" data-accion="tab-ajustes-fichas" aria-selected="false">Fichas</button>
+      </div>
 
       <form class="formulario" data-formulario="config" novalidate>
         <fieldset class="formulario__grupo">
@@ -112,12 +123,14 @@
         <p>Movimientos: <output data-marcador="movimientos">0</output></p>
         <p class="marcador__mensaje" data-mensaje role="status"></p>
       </div>
-      <div class="zona-tablero__scroll">
+      <div class="zona-tablero__area" data-area-tablero>
         <div class="tablero" data-tablero></div>
       </div>
       <p class="zona-tablero__pista">Arrastra una ficha sobre otra para intercambiarlas. También puedes pulsar dos fichas seguidas.</p>
     </section>
   </main>
+
+  <button type="button" class="ajustes-fondo" data-accion="cerrar-ajustes" data-abierto="false" aria-label="Cerrar panel de ajustes"></button>
 
   <footer class="pie">
     <p>Proyecto Tablero · HTML, CSS y JavaScript nativos</p>
@@ -139,10 +152,7 @@
       <button class="boton">Entendido</button>
     </form>
   </dialog>
-  <script src="js/model/Configuracion.js"></script>
-  <script src="js/model/Tablero.js"></script>
-  <script src="js/view/TableroView.js"></script>
-  <script src="js/controller/JuegoController.js"></script>
-  <script src="js/main.js"></script>
+  <!-- Punto de entrada: main.js importa los componentes MVC como módulos. -->
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

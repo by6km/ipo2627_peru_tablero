@@ -18,6 +18,10 @@ export function validarConfiguracion(config) {
   if (!TAMANOS.includes(tamano)) {
     return 'El tamaño de ficha no es válido.';
   }
+  if (!Array.isArray(tipos) || tipos.length !== 3 ||
+      tipos.some(t => !t || !FORMAS.includes(t.forma) || !/^#[0-9a-f]{6}$/i.test(t.color))) {
+    return 'La forma o el color de alguna ficha no es válido.';
+  }
 
   // Los 3 tipos deben distinguirse por forma o por color.
   const firmas = new Set(tipos.map(t => `${t.forma}|${t.color.toLowerCase()}`));

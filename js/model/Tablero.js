@@ -16,21 +16,22 @@ export class Tablero {
   }
 
   /**
-   * Genera un tablero solucionable: se asigna un tipo a cada fila (al menos
-   * dos distintos) y se barajan todas las fichas. Como se puede intercambiar
-   * cualquier par de celdas, cualquier reparto es siempre resoluble.
+   * Genera un tablero solucionable: cada tipo ocupa al menos una fila en la
+   * solución y el resto de filas recibe un tipo aleatorio. Después se barajan
+   * todas las fichas, manteniendo cantidades múltiplos de N.
    */
   #generar() {
     const n = this.dimension;
-    let tiposFila;
-    do {
-      tiposFila = Array.from({ length: n }, () => Math.floor(Math.random() * N_TIPOS));
-    } while (new Set(tiposFila).size < 2);
+    const tiposFila = Array.from({ length: N_TIPOS }, (_, i) => i);
+    for (let fila = N_TIPOS; fila < n; fila++) {
+      tiposFila.push(Math.floor(Math.random() * N_TIPOS));
+    }
+    this.#barajar(tiposFila);
 
     const fichas = tiposFila.flatMap(tipo => Array(n).fill(tipo));
     do {
       this.#barajar(fichas);
-    } while (this.#esCompleto(fichas)); // que no empiece ya resuelto
+    } while (this.#esCompleto(fichas)); // Evitar una partida inicialmente resuelta.
 
     this.#celdas = fichas;
   }
@@ -59,8 +60,14 @@ export class Tablero {
     return true;
   }
 
+  /** Un intercambio inválido o entre fichas iguales no modifica el tablero. */
   intercambiar(a, b) {
+    const enRango = indice => Number.isInteger(indice) && indice >= 0 && indice < this.#celdas.length;
+    if (!enRango(a) || !enRango(b) || a === b || this.#celdas[a] === this.#celdas[b]) {
+      return false;
+    }
     [this.#celdas[a], this.#celdas[b]] = [this.#celdas[b], this.#celdas[a]];
+    return true;
   }
 
   filaCompleta(fila) {
