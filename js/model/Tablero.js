@@ -1,8 +1,8 @@
 // MODELO: estado y reglas del juego (sin tocar el DOM).
 
-export const N_TIPOS = 3;
+const N_TIPOS = 3;
 
-export class Tablero {
+class Tablero {
   #celdas = [];
 
   constructor(dimension) {

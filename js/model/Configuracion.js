@@ -1,15 +1,15 @@
 // MODELO: reglas de la configuración (sin tocar el DOM).
 
-export const N_MIN = 3;
-export const N_MAX = 10;
-export const TAMANOS = ['pequena', 'mediana', 'grande'];
-export const FORMAS = ['circulo', 'cuadrado', 'triangulo', 'rombo', 'hexagono', 'estrella'];
+const N_MIN = 3;
+const N_MAX = 10;
+const TAMANOS = ['pequena', 'mediana', 'grande'];
+const FORMAS = ['circulo', 'cuadrado', 'triangulo', 'rombo', 'hexagono', 'estrella'];
 
 /**
  * Devuelve un mensaje de error o null si la configuración es válida.
  * config = { dimension, tamano, tipos: [{forma, color}, {forma, color}, {forma, color}] }
  */
-export function validarConfiguracion(config) {
+function validarConfiguracion(config) {
   const { dimension, tamano, tipos } = config;
 
   if (!Number.isInteger(dimension) || dimension < N_MIN || dimension > N_MAX) {

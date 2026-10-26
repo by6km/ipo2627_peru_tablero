@@ -22,7 +22,7 @@
   </header>
 
   <main class="juego">
-    <aside class="panel" id="panel-ajustes" data-abierto="false" data-vista="tablero" aria-labelledby="titulo-config">
+    <aside class="panel" id="panel-ajustes" data-panel="ajustes" data-abierto="false" data-vista="tablero" aria-labelledby="titulo-config">
       <div class="panel__cabecera">
         <h2 id="titulo-config">Configuración</h2>
         <button type="button" class="boton boton--secundario panel__cerrar" data-accion="cerrar-ajustes" aria-label="Cerrar ajustes">✕</button>
@@ -130,7 +130,7 @@
     </section>
   </main>
 
-  <button type="button" class="ajustes-fondo" data-accion="cerrar-ajustes" data-abierto="false" aria-label="Cerrar panel de ajustes"></button>
+  <button type="button" class="ajustes-fondo" data-accion="cerrar-ajustes" data-fondo-ajustes data-abierto="false" aria-label="Cerrar panel de ajustes"></button>
 
   <footer class="pie">
     <p>Proyecto Tablero · HTML, CSS y JavaScript nativos</p>
@@ -152,7 +152,12 @@
       <button class="boton">Entendido</button>
     </form>
   </dialog>
-  <!-- Punto de entrada: main.js importa los componentes MVC como módulos. -->
-  <script type="module" src="js/main.js"></script>
+  <!-- Scripts clásicos en orden MVC: modelo, vista, controlador y arranque.
+       Así la página funciona también abriendo index.html con doble clic. -->
+  <script src="js/model/Configuracion.js"></script>
+  <script src="js/model/Tablero.js"></script>
+  <script src="js/view/TableroView.js"></script>
+  <script src="js/controller/JuegoController.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>

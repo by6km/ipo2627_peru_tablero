@@ -1,13 +1,12 @@
 // VISTA: lee y escribe el DOM. No contiene reglas del juego.
 // Los elementos se localizan con atributos data-* (data-tablero, data-celda, ...).
 
-
 const NOMBRES_FORMA = {
   circulo: 'círculo', cuadrado: 'cuadrado', triangulo: 'triángulo',
   rombo: 'rombo', hexagono: 'hexágono', estrella: 'estrella'
 };
 
-export class TableroView {
+class TableroView {
   constructor(raiz) {
     this.raiz = raiz;
     this.tablero = raiz.querySelector('[data-tablero]');
@@ -18,7 +17,7 @@ export class TableroView {
     this.dialogoAyuda = raiz.querySelector('[data-dialogo="ayuda"]');
     this.origenArrastre = null;
     this.areaTablero = raiz.querySelector('[data-area-tablero]');
-    this.panelAjustes = raiz.querySelector('#panel-ajustes');
+    this.panelAjustes = raiz.querySelector('[data-panel="ajustes"]');
     this.botonAjustes = raiz.querySelector('[data-accion="ajustes"]');
     this.dimensionActual = 4;
 
@@ -130,7 +129,7 @@ export class TableroView {
     } else {
       this.botonAjustes.focus({ preventScroll: true });
     }
-    this.raiz.querySelector('[data-accion="cerrar-ajustes"].ajustes-fondo').dataset.abierto = String(abierto);
+    this.raiz.querySelector('[data-fondo-ajustes]').dataset.abierto = String(abierto);
   }
 
   _pestanaAjustes(tipo) {

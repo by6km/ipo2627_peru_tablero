@@ -1,9 +1,6 @@
 // CONTROLADOR: conecta la vista con el modelo y gestiona el flujo del juego.
 
-import { Tablero } from '../model/Tablero.js';
-import { validarConfiguracion } from '../model/Configuracion.js';
-
-export class JuegoController {
+class JuegoController {
   constructor(vista) {
     this.vista = vista;
     this.config = vista.leerConfiguracion();
